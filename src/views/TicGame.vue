@@ -34,9 +34,20 @@
 </template>
 
 <script>
-import {ElMessage} from 'element-plus'
+import {ElMessage, ElMessageBox} from 'element-plus'
 import checkUrl from '../assets/check.png'
 import crossUrl from '../assets/cross.png'
+
+const winList=[
+  '111000000',
+  '000111000',
+  '000000111',
+  '100100100',
+  '010010010',
+  '001001001',
+  '100010001',
+  '001010100',
+]
 
 export default {
   name: 'ticGame',
@@ -56,7 +67,22 @@ export default {
   watch: {
     win:function (val){
       if(val ===0){
-        this.successMessage('圆圈获胜','success');
+        ElMessageBox.confirm(
+          '对钩已经取得胜利，是否继续',
+          '提示',
+          {
+            confirmButtonText: '继续',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+        ).then(()=>{
+          this.goFirst=-1;
+          this.boxArr=[0, 0, 0, 0, 0, 0, 0, 0, 0];
+          this.win=-1;
+          this.crossList=[];
+          this.checkList=[];
+          this.buttonBroke=false;
+        })
       }
       if(val ===1){
         this.successMessage('叉叉获胜','success');
@@ -113,13 +139,17 @@ export default {
     circleFall(index) {
       this.checkList.push(index);
       this.boxArr[index] = 1;
-      this.checkCircleWin('circle')
+      if(this.checkList.length>=3){
+        this.checkCircleWin()
+      }
     },
     // 叉叉落子
     crossFall(index) {
       this.crossList.push(index);
       this.boxArr[index] = 2;
-      this.checkCrossWin('cross')
+      if(this.crossList.length>=3){
+        this.checkCrossWin()
+      }
     },
     // 处理落子逻辑
     handleFall(index) {
@@ -142,20 +172,33 @@ export default {
     //处理圆圈是否获胜
     checkCircleWin() {
       this.checkList.sort((a,b)=>a-b);
-      const str = this.checkList.join('')
-      // 判断行是否获胜
-      if(str.indexOf('012')!==-1 || str.indexOf('345')!==-1 || str.indexOf('678')!==-1){
-        this.win = 0;
+      const arr = [];
+      arr.length=9;
+      arr.fill( 0 );
+      for( let i=0; i<9; i++ ) {
+        if( this.checkList.indexOf(i) !== -1 ){
+          arr[i]=1;
+        }
       }
-      // 判断列是否获胜
-    },
+      const str = arr.join('')
+      if(winList.indexOf(str)!==-1){
+        this.win=0;
+      }
+    }, 
     // 处理叉叉是否获胜
     checkCrossWin() {
-      const params = this.crossList.sort((a,b)=>a-b);
-      const str = this.crossList.join('')
-      // 判断行是否获胜
-      if(str.indexOf('012')!==-1 || str.indexOf('345')!==-1 || str.indexOf('678')!==-1){
-        this.win = 1;
+      this.crossList.sort((a,b)=>a-b);
+      const arr = [];
+      arr.length=9;
+      arr.fill( 0 );
+      for( let i=0; i<9; i++ ) {
+        if( this.crossList.indexOf(i) !== -1 ){
+          arr[i]=1;
+        }
+      }
+      const str = arr.join('')
+      if(winList.indexOf(str)!==-1){
+        this.win=1;
       }
     }
   }
