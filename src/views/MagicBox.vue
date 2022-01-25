@@ -4,7 +4,7 @@
 
 <script>
 import * as Three from 'three';
-import { OrbitControls } from "https://threejs.org/examples/jsm/controls/OrbitControls.js";
+import { OrbitControls } from "../utils/OrbitControls";
 import  BasicRubik from '../utils/rubik'
 
 export default {

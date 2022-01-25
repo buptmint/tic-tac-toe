@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import and from '../utils/and'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import checkUrl from '../assets/check.png'
 import crossUrl from '../assets/cross.png'
@@ -76,16 +77,21 @@ export default {
             type: 'warning'
           }
         ).then(()=>{
-          this.goFirst=-1;
-          this.boxArr=[0, 0, 0, 0, 0, 0, 0, 0, 0];
-          this.win=-1;
-          this.crossList=[];
-          this.checkList=[];
-          this.buttonBroke=false;
+          this.reset();
         })
       }
       if(val ===1){
-        this.successMessage('叉叉获胜','success');
+        ElMessageBox.confirm(
+          '叉叉已经取得胜利，是否继续',
+          '提示',
+          {
+            confirmButtonText: '继续',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+        ).then(()=>{
+          this.reset();
+        })
       }
     }
   },
@@ -142,6 +148,19 @@ export default {
       if(this.checkList.length>=3){
         this.checkCircleWin()
       }
+      if( this.checkList.length===5 && this.win===-1 ){
+        ElMessageBox.confirm(
+          '和棋!',
+          '提示',
+          {
+            confirmButtonText: '继续',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+        ).then(()=>{
+          this.reset();
+        })
+      }
     },
     // 叉叉落子
     crossFall(index) {
@@ -149,6 +168,19 @@ export default {
       this.boxArr[index] = 2;
       if(this.crossList.length>=3){
         this.checkCrossWin()
+      }
+      if( this.crossList.length===5 && this.win===-1 ){
+        ElMessageBox.confirm(
+          '和棋!',
+          '提示',
+          {
+            confirmButtonText: '继续',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+        ).then(()=>{
+          this.reset();
+        })
       }
     },
     // 处理落子逻辑
@@ -180,9 +212,11 @@ export default {
           arr[i]=1;
         }
       }
-      const str = arr.join('')
-      if(winList.indexOf(str)!==-1){
-        this.win=0;
+      const str = arr.join('');
+      for(let i=0;i<winList.length;i++){
+        if(and(str,winList[i])===winList[i]){
+          this.win=0;
+        }
       }
     }, 
     // 处理叉叉是否获胜
@@ -197,9 +231,23 @@ export default {
         }
       }
       const str = arr.join('')
-      if(winList.indexOf(str)!==-1){
-        this.win=1;
+      for(let i=0;i<winList.length;i++){
+        if(and(str,winList[i])===winList[i]){
+          this.win=1;
+        }
       }
+    },
+    // 重置棋盘状态
+    reset() {
+      this.goFirst=-1;
+      for(let i=0;i<this.boxArr.length;i++){
+        this.boxArr[i]=0;
+      }
+      this.win=-1;
+      this.crossList=[];
+      this.checkList=[];
+      this.buttonBroke=false;
+      console.log(this.boxArr)
     }
   }
 }
