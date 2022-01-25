@@ -1,5 +1,5 @@
 <template>
-    <div ref="magicBox"></div>
+    <div ref="magicBox" class="box"></div>
 </template>
 
 <script>
@@ -29,7 +29,7 @@ export default {
             });
             this.renderer.setSize(this.width, this.height);
             // 背景色
-            this.renderer.setClearColor('#F26B60',1.0);
+            this.renderer.setClearColor('#CCCCFF',1.0);
             // 设置分辨率
             this.renderer.setPixelRatio(window.devicePixelRatio);
             this.$refs.magicBox.appendChild(this.renderer.domElement);
@@ -81,3 +81,9 @@ export default {
     }
 }
 </script>
+
+<style lang="scss" scoped>
+.box{
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+}
+</style>

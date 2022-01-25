@@ -1,7 +1,9 @@
 <template>
   <div class="tic-game">
     <p class="title">Chessboard</p>
-    <el-button @click="startGame" type="primary" class="begin" :disabled="buttonBroke">开始游戏</el-button>
+    <div class="button-group">
+      <el-button @click="startGame" type="primary" class="begin" :disabled="buttonBroke">开始游戏</el-button>
+    </div>
     <div class="chess-background">
       <div
           class="unit-box"
@@ -294,6 +296,10 @@ export default {
     .el-button {
       margin: 50px;
     }
+  }
+  .button-group {
+    display: flex;
+    align-items: center;
   }
 }
 </style>
